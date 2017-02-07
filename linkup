@@ -29,3 +29,11 @@ if(option=='--add' or option=='-a'):
 
     with open("%s.json"%topic, mode='w', encoding='utf-8') as f:
         json.dump(entries,f)
+
+if(option == '--load' or option == '-l'):
+    topic = argv[2]
+    subtopic = argv[3]
+    with open("%s.json"%topic, mode='r', encoding='utf-8') as f:
+        entries = json.load(f)
+    for link in entries[subtopic]:
+        webbrowser.open(link)
