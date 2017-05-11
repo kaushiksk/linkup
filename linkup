@@ -2,38 +2,87 @@
 
 import webbrowser
 import sys
-#from pathlib import Path
+from pathlib import Path
 import json
 import os.path
 
 argv = sys.argv
 argc = len(argv)
 
+# Error handling for lack of options
+
 option = argv[1]
-if(option=='--add' or option=='-a'):
-    topic = argv[2]
+
+
+# set home directory  using Path
+home = None 
+topic = argv[2]
+try:
     subtopic = argv[3]
+except:
+    subtopic = None
+
+
+
+
+# base_dir = home/".linkup/"
+basedir = ".json/"
+base_file = basedir + topic + ".json"
+
+if not os.path.exists(base_dir):
+    os.makedirs(base_dir)
+
+def addlink(base_file):
     links = argv[4:]
-    if not os.path.isfile("%s.json"%topic):
+    # use functions in Path, replace %s stuff with base_file once Path is integrated
+    if not os.path.isfile(base_file):
         # topic doesn't exist , create a topic file
-        with open("%s.json"%topic, mode='w', encoding='utf-8') as f:
+        with open(base_file, mode='w', encoding='utf-8') as f:
             obj = {}
             json.dump(obj,f)
 
-    with open("%s.json"%topic, mode='r', encoding='utf-8') as f:
+    with open(base_file, mode='r', encoding='utf-8') as f:
         entries = json.load(f)
+        
     if subtopic not in entries:
         entries[subtopic] = links
     else:
         entries[subtopic] += links
 
-    with open("%s.json"%topic, mode='w', encoding='utf-8') as f:
-        json.dump(entries,f)
+    with open(base_file, mode='w', encoding='utf-8') as f:
+        json.dump(entries,f,indent=2)
 
-if(option == '--load' or option == '-l'):
-    topic = argv[2]
-    subtopic = argv[3]
-    with open("%s.json"%topic, mode='r', encoding='utf-8') as f:
+def openlinks(base_file):
+    with open(base_file, mode='r', encoding='utf-8') as f:
         entries = json.load(f)
     for link in entries[subtopic]:
         webbrowser.open(link)
+
+def openall(base_file):
+    with open(base_file, mode='r', encoding='utf-8') as f:
+        entries = json.load(f)
+    for subtopic in entries.keys():
+        for link in entries[subtopic]:
+            webbrowser.open(link)
+
+def showlinks(base_file):
+    with open(base_file, mode='r', encoding='utf-8') as f:
+        entries = json.load(f)
+    for key in entries.keys():
+        print("\t", key, " : {} link(s)".format(len(entries[key])))
+
+if(option=='--add' or option=='-a'):
+    addlink(base_file)
+
+
+elif(option == '--load' or option == '-l'):
+    if subtopic == None:
+        openall(base_file)
+    else:
+        openlinks(base_file)
+
+elif(option == '--loadall' or option == '-la'):
+    openall(base_file)
+
+elif(option == '--show' or option == '-s'):
+    showlinks(base_file)
