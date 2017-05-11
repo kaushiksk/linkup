@@ -5,32 +5,17 @@ import sys
 from pathlib import Path
 import json
 import os.path
-
-argv = sys.argv
-argc = len(argv)
-
-# Error handling for lack of options
-
-option = argv[1]
-
-
-# set home directory  using Path
-home = None 
-topic = argv[2]
-try:
-    subtopic = argv[3]
-except:
-    subtopic = None
+from os import listdir
 
 
 
-
-# base_dir = home/".linkup/"
-basedir = ".json/"
-base_file = basedir + topic + ".json"
-
-if not os.path.exists(base_dir):
-    os.makedirs(base_dir)
+def helpme():
+    print("-h\t\t\t\t: This help text.")
+    print("-a [topic] [subtopic] [links]\t: Add links")
+    print("-l [topic] [subtopic]\t\t: Load links in subtopic")
+    print("-la [topic]\t\t\t: Load all links in topic")
+    print("-s [topic]\t\t\t: Show subtopics and link counts in subtopic")
+    print("-sa \t\t\t\t: Show all topics with subtopics and link counts in subtopic")
 
 def addlink(base_file):
     links = argv[4:]
@@ -68,8 +53,53 @@ def openall(base_file):
 def showlinks(base_file):
     with open(base_file, mode='r', encoding='utf-8') as f:
         entries = json.load(f)
+    print(base_file)
     for key in entries.keys():
-        print("\t", key, " : {} link(s)".format(len(entries[key])))
+        print("\t{:12} : {} links".format(key,len(entries[key])))
+
+def showall():
+    files = listdir(basedir)
+    for file in files:
+        showlinks(basedir+file)
+
+basedir = ".json/"
+
+
+if not os.path.exists(basedir):
+    os.makedirs(basedir)
+
+argv = sys.argv
+argc = len(argv)
+
+# Error handling for lack of options
+
+option = argv[1]
+
+if option == '--help' or option == '-h':
+    helpme()
+    sys.exit(0)
+
+if option == '--showall' or option == '-sa':
+    showall()
+    sys.exit(0)
+
+# set home directory  using Path
+home = None 
+topic = argv[2]
+base_file = basedir + topic + ".json"
+
+try:
+    subtopic = argv[3]
+except:
+    subtopic = None
+
+
+
+
+
+
+
+
 
 if(option=='--add' or option=='-a'):
     addlink(base_file)
