@@ -1,5 +1,5 @@
 # linkup
-Automate saving and opening web links topic/subtopic-wise using Python json and webbrowser modules
+Automate saving and opening web links topic/subtopic-wise using Python json and webbrowser modules as an alternative to bookmarking web pages.
 
 ## Usage
 `$ ./linkup [options] [args]`
