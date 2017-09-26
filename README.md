@@ -13,4 +13,4 @@ Automate saving and opening web links topic/subtopic-wise using Python json and 
 -s [topic]			: Show subtopics and link counts in subtopic
 -sa 				: Show all topics with subtopics and link counts in subtopic
 ```
-Deatiled demo : http://kaushiksk.me/2017/06/22/linkup-bookmarking-from-the-command-line/
+Detailed demo : http://kaushiksk.me/2017/06/22/linkup-bookmarking-from-the-command-line/
